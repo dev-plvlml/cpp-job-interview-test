@@ -1,6 +1,18 @@
 cmake_minimum_required(VERSION 3.10)
 project(template_test)
 
+set(SOURCES
+    src/template_test.cc)
+
+add_executable(${PROJECT_NAME}
+    ${SOURCES})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    CXX_STANDARD 20)
+
+target_link_libraries(${PROJECT_NAME}
+    template)
+
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
@@ -24,22 +36,7 @@ add_subdirectory(
     ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
     EXCLUDE_FROM_ALL)
 
-set(SOURCES
-    src/template_test.cc)
-
-add_executable(${PROJECT_NAME} ${SOURCES})
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    CXX_STANDARD 20)
-
 target_link_libraries(${PROJECT_NAME}
-    template)
+    gtest_main)
 
-find_package(GTest REQUIRED)
-target_link_libraries(${PROJECT_NAME}
-    GTest::GTest
-    GTest::Main)
-
-enable_testing()
-gtest_add_tests(
-    TARGET ${PROJECT_NAME})
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
